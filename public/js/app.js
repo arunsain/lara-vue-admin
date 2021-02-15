@@ -2229,12 +2229,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      valid: true,
       source: "arun",
       email: "",
+      emailRules: [function (v) {
+        return !!v || 'E-mail is required';
+      }, function (v) {
+        return /.+@.+\..+/.test(v) || 'E-mail must be valid';
+      }],
       password: "",
+      passwordRules: [function (v) {
+        return !!v || 'E-mail is required';
+      }],
       loading: false,
       snackbar: false,
       text: ''
@@ -20409,11 +20429,23 @@ var render = function() {
                                   _vm._v(" "),
                                   _c(
                                     "v-form",
+                                    {
+                                      ref: "form",
+                                      model: {
+                                        value: _vm.valid,
+                                        callback: function($$v) {
+                                          _vm.valid = $$v
+                                        },
+                                        expression: "valid"
+                                      }
+                                    },
                                     [
                                       _c("v-text-field", {
                                         attrs: {
                                           label: "Login",
                                           name: "login",
+                                          rules: _vm.emailRules,
+                                          required: "",
                                           "prepend-icon": "mdi-account",
                                           type: "text"
                                         },
@@ -20431,7 +20463,9 @@ var render = function() {
                                           id: "password",
                                           label: "Password",
                                           name: "password",
+                                          rules: _vm.passwordRules,
                                           "prepend-icon": "mdi-lock",
+                                          required: "",
                                           type: "password"
                                         },
                                         model: {
@@ -20457,7 +20491,10 @@ var render = function() {
                                   _c(
                                     "v-btn",
                                     {
-                                      attrs: { color: "primary" },
+                                      attrs: {
+                                        disabled: !_vm.valid,
+                                        color: "primary"
+                                      },
                                       on: { click: _vm.login }
                                     },
                                     [_vm._v("Login")]
@@ -80726,15 +80763,14 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*!****************************************************!*\
   !*** ./resources/js/components/AdminComponent.vue ***!
   \****************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AdminComponent_vue_vue_type_template_id_a603f2ce___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AdminComponent.vue?vue&type=template&id=a603f2ce& */ "./resources/js/components/AdminComponent.vue?vue&type=template&id=a603f2ce&");
 /* harmony import */ var _AdminComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AdminComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/AdminComponent.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _AdminComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _AdminComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -80764,7 +80800,7 @@ component.options.__file = "resources/js/components/AdminComponent.vue"
 /*!*****************************************************************************!*\
   !*** ./resources/js/components/AdminComponent.vue?vue&type=script&lang=js& ***!
   \*****************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

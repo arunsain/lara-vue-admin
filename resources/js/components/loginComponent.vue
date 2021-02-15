@@ -55,11 +55,19 @@
         top
         color="white accent-4"
       ></v-progress-linear>
-                  <v-form>
+                  <v-form
+
+                  ref="form"
+      v-model="valid"
+                  
+                  
+                  >
                     <v-text-field
                       label="Login"
                       name="login"
                       v-model="email"
+                      :rules="emailRules"
+                      required
                       prepend-icon="mdi-account"
                       type="text"
                     ></v-text-field>
@@ -69,14 +77,17 @@
                       label="Password"
                       name="password"
                       v-model="password"
+                       :rules="passwordRules"
+                      
                       prepend-icon="mdi-lock"
+                      required
                       type="password"
                     ></v-text-field>
                   </v-form>
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="primary" @click="login">Login</v-btn>
+                  <v-btn  :disabled="!valid" color="primary" @click="login">Login</v-btn>
                 </v-card-actions>
               </v-card>
             </v-col>
@@ -94,9 +105,18 @@
        data(){
 
            return {
+              valid: true,
                source:"arun",
                email : "",
+               emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      ],
                password: "",
+               passwordRules: [
+        v => !!v || 'E-mail is required',
+       
+      ],
                loading: false,
                 snackbar: false,
       text: '',
