@@ -12,6 +12,7 @@
             v-for="item in items"
             :key="item.text"
             link
+            :to="item.action"
           >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
@@ -61,15 +62,17 @@
         clipped-left
         color="red"
         dense
+        
       >
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-icon
           class="mx-4"
           large
+          
         >
           mdi-youtube
         </v-icon>
-        <v-toolbar-title class="mr-12 align-center">
+        <v-toolbar-title class="mr-12 align-center" >
           <span class="title">Youtube</span>
         </v-toolbar-title>
         <v-spacer></v-spacer>
@@ -95,7 +98,9 @@
             align="center"
           >
             <v-col >
-             here the code
+            
+             <router-view></router-view>
+             
 
               <v-snackbar
       v-model="snackbar"
@@ -135,11 +140,11 @@
      snackbar:false,
     drawer: null,
     items: [
-      { icon: 'mdi-trending-up', text: 'Most Popular' },
-      { icon: 'mdi-youtube-subscription', text: 'Subscriptions' },
-      { icon: 'mdi-history', text: 'History' },
-      { icon: 'mdi-playlist-play', text: 'Playlists' },
-      { icon: 'mdi-clock', text: 'Watch Later' },
+      { icon: 'mdi-trending-up', text: 'User',action :'user' },
+      { icon: 'mdi-youtube-subscription', text: 'Post',action :'user' },
+      { icon: 'mdi-history', text: 'Pages', action :'pages' },
+      { icon: 'mdi-playlist-play', text: 'Categories' ,action :'categories' },
+      { icon: 'mdi-clock', text: 'Roles' ,action :'/admin/role' },
     ],
     items2: [
       { picture: 28, text: 'Joseph' },

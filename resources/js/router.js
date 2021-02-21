@@ -7,6 +7,7 @@ const bar ={template:"<v-alert type='info'>This is info</v-alert>"};
 const user = { template:"<v-alert type='warning'>This is {{ $route.params.name }}</v-alert>"};
 import loginComponent from './components/loginComponent.vue';
 import adminComponent from './components/AdminComponent.vue';
+import roleComponent from './components/RoleComponent.vue';
 import test from './components/test.vue';
 
 const routes = [
@@ -40,15 +41,21 @@ const routes = [
 {
     path:'/admin',
     component:adminComponent,
-    beforeEnter:(to,from,next)=>{
-        if(localStorage.getItem('token')){
-            next();
-            console.log(localStorage.getItem('token'));
-        }else{
-            next('/login');
+    children:[
+        {
+            path:'role',
+            component:roleComponent
         }
+    ],
+    // beforeEnter:(to,from,next)=>{
+    //     if(localStorage.getItem('token')){
+    //         next();
+    //         console.log(localStorage.getItem('token'));
+    //     }else{
+    //         next('/login');
+    //     }
 
-    }
+    // }
 },
 {
     path:'/test',
@@ -58,4 +65,12 @@ const routes = [
 
 ]   ;   
 
-export default new Router({routes})
+const router = new Router({routes});
+
+router.beforeEach((to, from, next) => {
+    const token = localStorage.getItem('token') ||null;
+    window.axios.defaults.headers['Authorization'] = 'Bearer '+token;
+    next();
+  })
+
+export default router;
