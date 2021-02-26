@@ -22,6 +22,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(["middleware" =>[ "auth:api"] , "namespace" => "Api"],function(){
 
     Route::resource('roles','RoleController');
+    Route::get('verify','UserController@verify');
+    
 });
 
 

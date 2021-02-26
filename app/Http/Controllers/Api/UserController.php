@@ -42,5 +42,10 @@ class UserController extends Controller
 
     }
 
+    public function verify(Request $request){
+
+      return  request()->user()->only('email','name');
+    }
+
    
 }

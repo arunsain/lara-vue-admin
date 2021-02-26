@@ -47,15 +47,22 @@ const routes = [
             component:roleComponent
         }
     ],
-    // beforeEnter:(to,from,next)=>{
-    //     if(localStorage.getItem('token')){
-    //         next();
-    //         console.log(localStorage.getItem('token'));
-    //     }else{
-    //         next('/login');
-    //     }
+    beforeEnter:(to,from,next)=>{
+        axios.get('api/verify')
+        .then( (response) =>{
+          // handle success
+         next();
+        })
+        .catch( (error) => {
+            next('login');
+          console.log(error);
+        })
+        .then(function () {
+          // always executed
+        });
+      
 
-    // }
+    }
 },
 {
     path:'/test',

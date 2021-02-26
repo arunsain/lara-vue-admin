@@ -2025,25 +2025,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     source: String
   },
   data: function data() {
     return {
+      theme: true,
       snackbar: false,
       drawer: null,
       items: [{
@@ -2091,6 +2079,11 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     this.snackbar = localStorage.getItem('loginAlert') ? true : false;
     localStorage.removeItem('loginAlert');
+  },
+  watch: {
+    theme: function theme(old, newval) {
+      this.$vuetify.theme.dark = old;
+    }
   },
   methods: {
     logout: function logout() {
@@ -2229,19 +2222,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2269,22 +2249,16 @@ __webpack_require__.r(__webpack_exports__);
       desserts: [],
       editedIndex: -1,
       editedItem: {
-        name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0
+        name: ''
       },
       defaultItem: {
-        name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0
+        name: ''
       }
     };
   },
   computed: {
     formTitle: function formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
+      return this.editedIndex === -1 ? 'Add Role' : 'Edit Role';
     }
   },
   watch: {
@@ -2331,23 +2305,50 @@ __webpack_require__.r(__webpack_exports__);
       this.dialog = true;
     },
     deleteItem: function deleteItem(item) {
+      var _this2 = this;
+
       var index = this.desserts.indexOf(item);
-      confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1);
+      var cnf = confirm('Are you sure you want to delete this item?');
+
+      if (cnf) {
+        axios["delete"]('/api/roles/' + item.id).then(function (response) {
+          _this2.desserts.splice(index, 1);
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      }
     },
     close: function close() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.dialog = false;
       this.$nextTick(function () {
-        _this2.editedItem = Object.assign({}, _this2.defaultItem);
-        _this2.editedIndex = -1;
+        _this3.editedItem = Object.assign({}, _this3.defaultItem);
       });
     },
     save: function save() {
+      var _this4 = this;
+
       if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+        axios.put('/api/roles/' + this.editedItem.id, {
+          name: this.editedItem.name
+        }).then(function (response) {
+          console.log(_this4.editedIndex);
+          Object.assign(_this4.desserts[_this4.editedIndex], response.data.role);
+          _this4.editedIndex = -1;
+        })["catch"](function (error) {
+          console.log(error);
+        });
       } else {
-        this.desserts.push(this.editedItem);
+        axios.post('/api/roles', {
+          name: this.editedItem.name
+        }).then(function (response) {
+          _this4.desserts.push(response.data.role);
+
+          console.log(response);
+        })["catch"](function (error) {
+          console.log(error);
+        });
       }
 
       this.close();
@@ -20275,19 +20276,22 @@ var render = function() {
                     { staticClass: "mt-4", attrs: { link: "" } },
                     [
                       _c(
-                        "v-list-item-action",
-                        [
-                          _c("v-icon", { attrs: { color: "grey darken-1" } }, [
-                            _vm._v("mdi-plus-circle-outline")
-                          ])
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
                         "v-list-item-title",
                         { staticClass: "grey--text text--darken-1" },
-                        [_vm._v("Browse Channels")]
+                        [
+                          _c("v-switch", {
+                            staticClass: "ma-4",
+                            attrs: { label: "Switch theme" },
+                            model: {
+                              value: _vm.theme,
+                              callback: function($$v) {
+                                _vm.theme = $$v
+                              },
+                              expression: "theme"
+                            }
+                          })
+                        ],
+                        1
                       )
                     ],
                     1
@@ -20373,72 +20377,48 @@ var render = function() {
             "v-main",
             [
               _c(
-                "v-container",
-                { staticClass: "fill-height" },
-                [
-                  _c(
-                    "v-row",
-                    { attrs: { justify: "center", align: "center" } },
-                    [
-                      _c(
-                        "v-col",
-                        [
-                          _c("router-view"),
-                          _vm._v(" "),
+                "v-snackbar",
+                {
+                  attrs: { top: "" },
+                  scopedSlots: _vm._u([
+                    {
+                      key: "action",
+                      fn: function(ref) {
+                        var attrs = ref.attrs
+                        return [
                           _c(
-                            "v-snackbar",
-                            {
-                              attrs: { top: "" },
-                              scopedSlots: _vm._u([
-                                {
-                                  key: "action",
-                                  fn: function(ref) {
-                                    var attrs = ref.attrs
-                                    return [
-                                      _c(
-                                        "v-btn",
-                                        _vm._b(
-                                          {
-                                            attrs: { color: "pink", text: "" },
-                                            on: {
-                                              click: function($event) {
-                                                _vm.snackbar = false
-                                              }
-                                            }
-                                          },
-                                          "v-btn",
-                                          attrs,
-                                          false
-                                        ),
-                                        [_vm._v("\n        Close\n      ")]
-                                      )
-                                    ]
+                            "v-btn",
+                            _vm._b(
+                              {
+                                attrs: { color: "pink", text: "" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.snackbar = false
                                   }
                                 }
-                              ]),
-                              model: {
-                                value: _vm.snackbar,
-                                callback: function($$v) {
-                                  _vm.snackbar = $$v
-                                },
-                                expression: "snackbar"
-                              }
-                            },
-                            [
-                              _vm._v(
-                                "\n   You are login successfully !\n\n    "
-                              )
-                            ]
+                              },
+                              "v-btn",
+                              attrs,
+                              false
+                            ),
+                            [_vm._v("\n        Close\n      ")]
                           )
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
+                        ]
+                      }
+                    }
+                  ]),
+                  model: {
+                    value: _vm.snackbar,
+                    callback: function($$v) {
+                      _vm.snackbar = $$v
+                    },
+                    expression: "snackbar"
+                  }
+                },
+                [_vm._v("\n   You are login successfully !\n\n    ")]
+              ),
+              _vm._v(" "),
+              _c("router-view")
             ],
             1
           )
@@ -20570,9 +20550,9 @@ var render = function() {
           return [
             _c(
               "v-toolbar",
-              { attrs: { flat: "", color: "white" } },
+              { attrs: { flat: "", color: "dark" } },
               [
-                _c("v-toolbar-title", [_vm._v("My CRUD")]),
+                _c("v-toolbar-title", [_vm._v("Roles")]),
                 _vm._v(" "),
                 _c("v-divider", {
                   staticClass: "mx-4",
@@ -20598,7 +20578,7 @@ var render = function() {
                                 _vm._b(
                                   {
                                     staticClass: "mb-2",
-                                    attrs: { color: "primary", dark: "" }
+                                    attrs: { color: "error", dark: "" }
                                   },
                                   "v-btn",
                                   attrs,
@@ -20606,7 +20586,7 @@ var render = function() {
                                 ),
                                 on
                               ),
-                              [_vm._v("New Item")]
+                              [_vm._v("New Role")]
                             )
                           ]
                         }
@@ -20643,11 +20623,15 @@ var render = function() {
                                     _c(
                                       "v-col",
                                       {
-                                        attrs: { cols: "12", sm: "6", md: "4" }
+                                        attrs: {
+                                          cols: "12",
+                                          sm: "12",
+                                          md: "12"
+                                        }
                                       },
                                       [
                                         _c("v-text-field", {
-                                          attrs: { label: "Dessert name" },
+                                          attrs: { label: "Role name" },
                                           model: {
                                             value: _vm.editedItem.name,
                                             callback: function($$v) {
@@ -20658,102 +20642,6 @@ var render = function() {
                                               )
                                             },
                                             expression: "editedItem.name"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-col",
-                                      {
-                                        attrs: { cols: "12", sm: "6", md: "4" }
-                                      },
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Calories" },
-                                          model: {
-                                            value: _vm.editedItem.calories,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "calories",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "editedItem.calories"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-col",
-                                      {
-                                        attrs: { cols: "12", sm: "6", md: "4" }
-                                      },
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Fat (g)" },
-                                          model: {
-                                            value: _vm.editedItem.fat,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "fat",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "editedItem.fat"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-col",
-                                      {
-                                        attrs: { cols: "12", sm: "6", md: "4" }
-                                      },
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Carbs (g)" },
-                                          model: {
-                                            value: _vm.editedItem.carbs,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "carbs",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "editedItem.carbs"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "v-col",
-                                      {
-                                        attrs: { cols: "12", sm: "6", md: "4" }
-                                      },
-                                      [
-                                        _c("v-text-field", {
-                                          attrs: { label: "Protein (g)" },
-                                          model: {
-                                            value: _vm.editedItem.protein,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.editedItem,
-                                                "protein",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "editedItem.protein"
                                           }
                                         })
                                       ],
@@ -20840,19 +20728,6 @@ var render = function() {
             )
           ]
         }
-      },
-      {
-        key: "no-data",
-        fn: function() {
-          return [
-            _c(
-              "v-btn",
-              { attrs: { color: "primary" }, on: { click: _vm.initialize } },
-              [_vm._v("Reset")]
-            )
-          ]
-        },
-        proxy: true
       }
     ])
   })
@@ -81755,15 +81630,17 @@ var routes = [{
   children: [{
     path: 'role',
     component: _components_RoleComponent_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
-  }] // beforeEnter:(to,from,next)=>{
-  //     if(localStorage.getItem('token')){
-  //         next();
-  //         console.log(localStorage.getItem('token'));
-  //     }else{
-  //         next('/login');
-  //     }
-  // }
-
+  }],
+  beforeEnter: function beforeEnter(to, from, next) {
+    axios.get('api/verify').then(function (response) {
+      // handle success
+      next();
+    })["catch"](function (error) {
+      next('login');
+      console.log(error);
+    }).then(function () {// always executed
+    });
+  }
 }, {
   path: '/test',
   component: _components_test_vue__WEBPACK_IMPORTED_MODULE_5__["default"]

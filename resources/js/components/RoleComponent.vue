@@ -9,9 +9,9 @@ loading-text="Loading... Please wait"
 >
 
 
- <template v-slot:top>
-      <v-toolbar flat color="white">
-        <v-toolbar-title>My CRUD</v-toolbar-title>
+ <template v-slot:top >
+      <v-toolbar flat color="dark">
+        <v-toolbar-title>Roles</v-toolbar-title>
         <v-divider
           class="mx-4"
           inset
@@ -21,12 +21,12 @@ loading-text="Loading... Please wait"
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              color="primary"
+              color="error"
               dark
               class="mb-2"
               v-bind="attrs"
               v-on="on"
-            >New Item</v-btn>
+            >New Role</v-btn>
           </template>
           <v-card>
             <v-card-title>
@@ -36,21 +36,10 @@ loading-text="Loading... Please wait"
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+                  <v-col cols="12" sm="12" md="12">
+                    <v-text-field v-model="editedItem.name" label="Role name"></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
-                  </v-col>
+               
                 </v-row>
               </v-container>
             </v-card-text>
@@ -79,9 +68,7 @@ loading-text="Loading... Please wait"
         mdi-delete
       </v-icon>
     </template>
-    <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
-    </template>
+ 
 
 
 
@@ -114,23 +101,15 @@ loading-text="Loading... Please wait"
       editedIndex: -1,
       editedItem: {
         name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-      
       },
       defaultItem: {
         name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-       
       },
     }),
 
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+        return this.editedIndex === -1 ? 'Add Role' : 'Edit Role'
       },
     },
 
@@ -199,22 +178,59 @@ axios.interceptors.response.use( (response) => {
 
       deleteItem (item) {
         const index = this.desserts.indexOf(item)
-        confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+      const cnf =   confirm('Are you sure you want to delete this item?') ;
+        if(cnf){
+          axios.delete('/api/roles/'+item.id)
+  .then( (response) => {
+    
+    this.desserts.splice(index, 1)
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+        }
+      
       },
 
       close () {
         this.dialog = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
+         
         })
       },
 
       save () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          axios.put('/api/roles/'+this.editedItem.id, {
+    name: this.editedItem.name
+   
+  })
+  .then( response => {
+   
+    console.log(this.editedIndex);
+     Object.assign(this.desserts[this.editedIndex], response.data.role)
+      this.editedIndex = -1
+  })
+  .catch( (error) =>{
+    console.log(error);
+  
+  });
+         
         } else {
-          this.desserts.push(this.editedItem)
+          axios.post('/api/roles', {
+          name: this.editedItem.name
+          
+          })
+          .then( (response) => {
+            this.desserts.push(response.data.role)
+          console.log(response);
+          })
+          .catch( (error) => {
+          console.log(error);
+          });
+          
         }
         this.close()
       },

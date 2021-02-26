@@ -43,10 +43,8 @@
             class="mt-4"
             link
           >
-            <v-list-item-action>
-              <v-icon color="grey darken-1">mdi-plus-circle-outline</v-icon>
-            </v-list-item-action>
-            <v-list-item-title class="grey--text text--darken-1">Browse Channels</v-list-item-title>
+            
+            <v-list-item-title class="grey--text text--darken-1">   <v-switch v-model="theme" class="ma-4" label="Switch theme"></v-switch></v-list-item-title>
           </v-list-item>
           <v-list-item link @click="logout">
             <v-list-item-action>
@@ -92,17 +90,7 @@
       </v-app-bar>
   
       <v-main>
-        <v-container class="fill-height">
-          <v-row
-            justify="center"
-            align="center"
-          >
-            <v-col >
-            
-             <router-view></router-view>
-             
-
-              <v-snackbar
+         <v-snackbar
       v-model="snackbar"
       top
     >
@@ -119,9 +107,8 @@
         </v-btn>
       </template>
     </v-snackbar>
-            </v-col>
-          </v-row>
-        </v-container>
+        <router-view></router-view>
+     
       </v-main>
     </v-app>
   </v-app>
@@ -137,6 +124,7 @@
   
   },
   data: () => ({
+    theme:true,
      snackbar:false,
     drawer: null,
     items: [
@@ -163,6 +151,13 @@
     this.snackbar = localStorage.getItem('loginAlert')? true : false ;
     localStorage.removeItem('loginAlert');
 
+
+  },
+  watch:{
+
+    theme:function(old,newval){
+      this.$vuetify.theme.dark = old;
+    }
 
   },
   methods:{
