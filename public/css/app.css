@@ -23542,6 +23542,9 @@ html.overflow-y-hidden {
   cursor: pointer;
   outline: 0;
 }
+.v-data-table-header th.sortable .v-data-table-header__icon {
+  line-height: 0.9;
+}
 .v-data-table-header th.active .v-data-table-header__icon, .v-data-table-header th:hover .v-data-table-header__icon {
   transform: none;
   opacity: 1;

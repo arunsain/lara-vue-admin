@@ -130,7 +130,7 @@
     items: [
       { icon: 'mdi-trending-up', text: 'User',action :'user' },
       { icon: 'mdi-youtube-subscription', text: 'Post',action :'user' },
-      { icon: 'mdi-history', text: 'Pages', action :'pages' },
+      { icon: 'mdi-history', text: 'Post', action :'/admin/post' },
       { icon: 'mdi-playlist-play', text: 'Categories' ,action :'categories' },
       { icon: 'mdi-clock', text: 'Roles' ,action :'/admin/role' },
     ],

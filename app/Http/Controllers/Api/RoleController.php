@@ -23,6 +23,17 @@ class RoleController extends Controller
 
     }
 
+    public function roleLIst(Request $request)
+    {
+        $perPage = $request->per_page;
+        $role = Role::paginate($perPage);
+        return response()->json([
+
+            "roles" =>$role
+        ],200);
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *

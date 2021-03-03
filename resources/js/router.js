@@ -8,6 +8,7 @@ const user = { template:"<v-alert type='warning'>This is {{ $route.params.name }
 import loginComponent from './components/loginComponent.vue';
 import adminComponent from './components/AdminComponent.vue';
 import roleComponent from './components/RoleComponent.vue';
+import rolenewComponent from './components/RolenewComponent.vue';
 import test from './components/test.vue';
 
 const routes = [
@@ -38,6 +39,7 @@ const routes = [
     path:'/',
     redirect:'/login'
 },
+
 {
     path:'/admin',
     component:adminComponent,
@@ -45,7 +47,12 @@ const routes = [
         {
             path:'role',
             component:roleComponent
-        }
+        },
+        {
+            path:'post',
+            component:rolenewComponent
+        },
+       
     ],
     beforeEnter:(to,from,next)=>{
         axios.get('api/verify')
